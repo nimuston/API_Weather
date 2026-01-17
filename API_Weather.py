@@ -9,7 +9,6 @@ def main(api_key, location):
     api_address = 'http://api.weatherstack.com/'
     responce = requests.get(api_address + 'current?access_key=' + api_key + '&query=' + location)
 
-    #start if statement
     if responce.status_code == 200:
         print("Connection to API was successfull, start fecthing weather information from " + location)
         responce_to_dict = responce.json()
