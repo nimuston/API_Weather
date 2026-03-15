@@ -1,2 +1,3 @@
-Helsinki;Finland;60.176;24.934;10;Sunny;12
-Helsinki;Finland;60.176;24.934;10;Sunny;12
+Helsinki;Finland;60.176;9;Partly Cloudy ;13
+Espoo;Finland;60.217;9;Partly Cloudy ;16
+Vantaa;Finland;60.300;9;Partly Cloudy ;15

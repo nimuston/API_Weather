@@ -1,4 +1,8 @@
 {
   "API_KEY": "your_api_key_here",
-  "location": "Helsinki"
+  "locations": [
+    "Helsinki",
+    "Espoo",
+    "Vantaa"
+  ]
 }

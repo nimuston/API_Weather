@@ -2,6 +2,7 @@
 # Prints weather information from selected location
 import requests
 import json
+import time
 
 
 def main():
@@ -9,38 +10,44 @@ def main():
         config = json.load(config_file)
 
     api_key = config["API_KEY"]
-    location = config["location"]
+    locations = config["locations"]   # list of locations
 
     api_address = "http://api.weatherstack.com/"
-    response = requests.get(api_address + "current?access_key=" + api_key + "&query=" + location)
 
-    if response.status_code == 200:
-        print("Connection to API was successful, start fetching weather information from " + location)
+    for location in locations:
+        response = requests.get(
+            api_address + "current?access_key=" + api_key + "&query=" + location
+        )
 
-        response_to_dict = response.json()
+        if response.status_code == 200:
+            print("Fetching weather information from " + location)
 
-        location_name = response_to_dict['location']['name']
-        country = response_to_dict['location']['country']
-        latitude = response_to_dict['location']['lat']
-        longitude = response_to_dict['location']['lon']
-        temperature = response_to_dict['current']['temperature']
-        description = response_to_dict['current']['weather_descriptions'][0]
-        wind_speed = response_to_dict['current']['wind_speed']
+            data = response.json()
 
-        print("Location which weather information is fetched: " + location_name)
-        print("Location country: " + country)
-        print("Locations latitude: " + latitude + " and longitude: " + response_to_dict['location']['lon'])
-        print("Current temperature: " + str(temperature) + " c")
-        print("Weather description: " + description)
-        print("Wind speed is: " + str(wind_speed))
+            location_name = data['location']['name']
+            country = data['location']['country']
+            latitude = data['location']['lat']
+            longitude = data['location']['lon']
+            temperature = data['current']['temperature']
+            description = data['current']['weather_descriptions'][0]
+            wind_speed = data['current']['wind_speed']
 
-        with open("results.txt", "a") as results_file:
-            results_file.write(f"{location_name};{country};{latitude};{longitude};{temperature};{description};{wind_speed}"+'\n')
+            print("Location:", location_name)
+            print("Country:", country)
+            print("Latitude:", latitude, "Longitude:", longitude)
+            print("Temperature:", temperature, "c")
+            print("Weather description:", description)
+            print("Wind speed:", wind_speed)
 
-        print("Results saved to results.txt")
+            with open("results.txt", "a") as results_file:
+                results_file.write(
+                    f"{location_name};{country};{latitude};{temperature};{description};{wind_speed}\n"
+                )
+            #need to add 1 sec sleep, without it will return 429 return code
+            time.sleep(1)
 
-    else:
-        print("Something went wrong, please check API key")
+        else:
+            print("Something went wrong for location:", location +" " + str(response.status_code))
 
 
 if __name__ == "__main__":
