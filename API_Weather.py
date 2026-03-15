@@ -2,28 +2,46 @@
 # Prints weather information from selected location
 import requests
 import json
-import sys
 
 
-def main(api_key, location):
-    api_address = 'http://api.weatherstack.com/'
-    responce = requests.get(api_address + 'current?access_key=' + api_key + '&query=' + location)
+def main():
+    with open("config.json", "r") as config_file:
+        config = json.load(config_file)
 
-    if responce.status_code == 200:
-        print("Connection to API was successfull, start fecthing weather information from " + location)
-        responce_to_dict = responce.json()
-        print("Location which weather information is fetched: " +responce_to_dict['location']['name'])
-        print("Location country: " +responce_to_dict['location']['country'])
-        print("Locations latitude: " +responce_to_dict['location']['lat'] + " " + " and longitude: " + responce_to_dict['location']['lon'])
-        print("Current temperature: " +str(responce_to_dict['current']['temperature']) +" c")
-        print("Weather description: " +str(responce_to_dict['current']['weather_descriptions']))
-        print("Wind speed is: " +str(responce_to_dict['current']['wind_speed']))
+    api_key = config["API_KEY"]
+    location = config["location"]
+
+    api_address = "http://api.weatherstack.com/"
+    response = requests.get(api_address + "current?access_key=" + api_key + "&query=" + location)
+
+    if response.status_code == 200:
+        print("Connection to API was successful, start fetching weather information from " + location)
+
+        response_to_dict = response.json()
+
+        location_name = response_to_dict['location']['name']
+        country = response_to_dict['location']['country']
+        latitude = response_to_dict['location']['lat']
+        longitude = response_to_dict['location']['lon']
+        temperature = response_to_dict['current']['temperature']
+        description = response_to_dict['current']['weather_descriptions'][0]
+        wind_speed = response_to_dict['current']['wind_speed']
+
+        print("Location which weather information is fetched: " + location_name)
+        print("Location country: " + country)
+        print("Locations latitude: " + latitude + " and longitude: " + response_to_dict['location']['lon'])
+        print("Current temperature: " + str(temperature) + " c")
+        print("Weather description: " + description)
+        print("Wind speed is: " + str(wind_speed))
+
+        with open("results.txt", "a") as results_file:
+            results_file.write(f"{location_name};{country};{latitude};{longitude};{temperature};{description};{wind_speed}"+'\n')
+
+        print("Results saved to results.txt")
+
     else:
         print("Something went wrong, please check API key")
 
 
 if __name__ == "__main__":
-    print("Give API_key as first argument, and city as second argument")
-    api_key = input("Please give API key: ")
-    location = input("Please give location which weather details you what: ")
-    main(api_key, location)
+    main()

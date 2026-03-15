@@ -1,0 +1,2 @@
+Helsinki;Finland;60.176;24.934;10;Sunny;12
+Helsinki;Finland;60.176;24.934;10;Sunny;12
