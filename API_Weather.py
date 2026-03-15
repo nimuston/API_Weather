@@ -3,6 +3,7 @@
 import requests
 import json
 import time
+import datetime
 
 
 def main():
@@ -38,10 +39,12 @@ def main():
             print("Temperature:", temperature, "c")
             print("Weather description:", description)
             print("Wind speed:", wind_speed)
+            
+            now = datetime.datetime.now()
 
             with open("results.txt", "a") as results_file:
                 results_file.write(
-                    f"{location_name};{country};{latitude};{temperature};{description};{wind_speed}\n"
+                    f"{location_name};{country};{latitude};{temperature};{description};{wind_speed};{now.strftime("%Y%m%d")};{now.strftime("%H%M%S")}\n"
                 )
             #need to add 1 sec sleep, without it will return 429 return code
             time.sleep(1)
